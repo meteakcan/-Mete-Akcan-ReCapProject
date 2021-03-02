@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
+//Core : Evrensel katman(Bütün .NET projelerinde kullanılabilir.)
+//Core katmanı diğer hiçbir katmanı referans almaz.
+//namespace(isim uzayı) = classlara,interface vs.'lere daha kolay ulaşablimek içindir.
+//↓↓↓Core klasörünün içindeki DataAccess klasöründe bulunur.
 namespace DataAccess.Abstract
 {
 

@@ -29,5 +29,30 @@ namespace Business.Concrete
         {
             return _carDal.GetAll(c => c.CarId == CarId);
         }
+
+        public void Add(Car car)
+        {
+            if (car.Description==null && car.Price==0)
+            {
+                Console.WriteLine("Hatalı veri girişi!");
+            }
+            else
+            {
+                _carDal.Add(car);
+                Console.WriteLine("Eklendi!");
+            }
+        }
+
+        public void Delete(Car car)
+        {
+            _carDal.Delete(car);
+            Console.WriteLine("Silindi!");
+        }
+
+        public void Update(Car car)
+        {
+            _carDal.Update(car);
+            Console.WriteLine("Güncellendi!");
+        }
     }
 }
