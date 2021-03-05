@@ -1,6 +1,9 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,44 +18,49 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        public List<Car> GetByUnitPrice(decimal min, decimal max)
+        public IDataResult<List<Car>> GetByUnitPrice(decimal min, decimal max)//
         {
-            return _carDal.GetAll(c => c.Price >= min && c.Price <= max);
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.Price >= min && c.Price <= max), Message.Listed);
         }
 
-        public List<Car> GetAll()
+        public IDataResult<List<Car>> GetAll()//
         {
-            return _carDal.GetAll();
+            if (DateTime.Now.Hour == 22)
+            {
+                return new ErrorDataResult<List<Car>>(Message.MaintenanceTime);
+            }
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(),Message.Listed);
         }
 
-        public List<Car> GetAllByCarId(int CarId)
+        public IDataResult<List<Car>> GetAllByCarId(int CarId)//
         {
-            return _carDal.GetAll(c => c.CarId == CarId);
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.CarId == CarId), Message.Listed);
         }
-
-        public void Add(Car car)
+        public IResult Add(Car car)//
         {
             if (car.Description==null && car.Price==0)
             {
-                Console.WriteLine("Hatalı veri girişi!");
+                return new ErrorResult(Message.NameInvalid);
             }
-            else
-            {
-                _carDal.Add(car);
-                Console.WriteLine("Eklendi!");
-            }
+            _carDal.Add(car);
+            return new SuccessResult(Message.Added);
         }
 
-        public void Delete(Car car)
+        public IResult Delete(Car car)//
         {
             _carDal.Delete(car);
-            Console.WriteLine("Silindi!");
+            return new SuccessResult(Message.Deleted);
         }
 
-        public void Update(Car car)
+        public IResult Update(Car car)//
         {
             _carDal.Update(car);
-            Console.WriteLine("Güncellendi!");
+            return new SuccessResult(Message.Updated);
+        }
+
+        public IDataResult<List<CarDetailDto>> GetCarDetails()
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(), Message.Listed);
         }
     }
 }

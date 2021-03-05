@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -16,46 +18,44 @@ namespace Business.Concrete
             _brandDal = brandDal;
         }
 
-        public void Add(Brand brand)
+        public IResult Add(Brand brand)
         {
             if (brand.BrandName==null)
             {
-                Console.WriteLine("Hatalı veri girişi!");
+                return new ErrorResult(Message.NameInvalid);
             }
-            else
-            {
-                _brandDal.Add(brand);
-                Console.WriteLine("Eklendi!");
-            }
+            _brandDal.Add(brand);
+            return new SuccessResult(Message.Added);
+
         }
 
-        public void Delete(Brand brand)
+        public IResult Delete(Brand brand)
         {
             _brandDal.Delete(brand);
-            Console.WriteLine("Silindi!");
+            return new SuccessResult(Message.Deleted);
         }
 
-        public List<Brand> GetAll()
+        public IDataResult<List<Brand>> GetAll()
         {
-            return _brandDal.GetAll();
+            return new SuccessDataResult<List<Brand>>(_brandDal.GetAll(), Message.Listed);
         }
 
-        public Brand GetById(int BrandId)
+        public IDataResult<Brand> GetById(int BrandId)
         {
-            return _brandDal.Get(b => b.BrandId == BrandId);
-            // b=> : veritebanına SELECT * fROM Categories WHERE.... işlemini yapar(Linq)
+            return new SuccessDataResult<Brand>(_brandDal.Get(b => b.BrandId == BrandId), Message.Listed);
+            // b=> : veritebanına SELECT * FROM Categories WHERE.... işlemini yapar(Linq)
         }
 
-        public Brand GetByName(string BrandName)
+        public IDataResult<Brand> GetByName(string BrandName)
         {
-            return _brandDal.Get(b => b.BrandName == BrandName);
-            // c=> : veritebanına SELECT * fROM Categories WHERE.... işlemini yapar(Linq)
+            return new SuccessDataResult<Brand>(_brandDal.Get(b => b.BrandName == BrandName), Message.Listed);
+            // c=> : veritebanına SELECT * FROM Categories WHERE.... işlemini yapar(Linq)
         }
 
-        public void Update(Brand brand)
+        public IResult Update(Brand brand)
         {
             _brandDal.Update(brand);
-            Console.WriteLine("Güncellendi!");
+            return new SuccessResult(Message.Updated);
         }
     }
 }

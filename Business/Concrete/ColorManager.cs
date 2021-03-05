@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -15,44 +17,41 @@ namespace Business.Concrete
             _colorDal = colorDal;
         }
 
-        public void Add(Color color)
+        public IResult Add(Color color)
         {
             if (color.ColorName == null)
             {
-                Console.WriteLine("Hatalı veri girişi!");
+                return new ErrorResult(Message.NameInvalid);
             }
-            else
-            {
                 _colorDal.Add(color);
-                Console.WriteLine("Eklendi!");
-            }
+            return new SuccessResult(Message.Added);
         }
 
-        public void Delete(Color color)
+        public IResult Delete(Color color)
         {
             _colorDal.Delete(color);
-            Console.WriteLine("Silindi!");
+            return new SuccessResult(Message.Deleted);
         }
 
-        public List<Color> GetAll()
+        public IDataResult<List<Color>> GetAll()
         {
-            return _colorDal.GetAll();
+            return new SuccessDataResult<List<Color>>(_colorDal.GetAll(), Message.Listed);
         }
 
-        public Color GetById(int ColorId)
+        public IDataResult<Color> GetById(int ColorId)
         {
-            return _colorDal.Get(c => c.ColorId == ColorId);
+            return new SuccessDataResult<Color>(_colorDal.Get(c => c.ColorId == ColorId), Message.Listed);
         }
 
-        public Color GetByName(string ColorName)
+        public IDataResult<Color> GetByName(string ColorName)
         {
-            return _colorDal.Get(c => c.ColorName == ColorName);
+            return new SuccessDataResult<Color>(_colorDal.Get(c => c.ColorName == ColorName), Message.Listed);
         }
 
-        public void Update(Color color)
+        public IResult Update(Color color)
         {
             _colorDal.Update(color);
-            Console.WriteLine("Güncellendi!");
+            return new SuccessResult(Message.Updated);
         }
     }
 }

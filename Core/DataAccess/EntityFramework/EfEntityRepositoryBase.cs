@@ -7,7 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Core.DataAccess.EntityFramework
+namespace Core.DataResult.EntityFramework
 {
     public class EfEntityRepositoryBase<TEntity, TContext> : IEntityRepository<TEntity>  //<T> ile aynı(İsim farketmez ama genelde T kullanırız.)
     where TEntity : class, IEntity, new()
@@ -47,10 +47,10 @@ namespace Core.DataAccess.EntityFramework
         {
             using (TContext context = new TContext())
             {
-                return filter == null ? context.Set<TEntity>().ToList() : context.Set<TEntity>().Where(filter).ToList();
                 // arkaplanda SELECT* FROM(veritabanı) yapar ve bu aldığımız veriyi listeye çevirir.
                 // : ise verdiğimiz filtre işlemini uygular.
                 //ternary operatörü
+                return filter == null ? context.Set<TEntity>().ToList() : context.Set<TEntity>().Where(filter).ToList();
             }
         }
 
